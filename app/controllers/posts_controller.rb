@@ -5,7 +5,7 @@ class PostsController < ApplicationController
   # GET /posts
   # GET /posts.json
   def index
-    @posts = Post.all
+    @posts = Post.all.order(created_at: :desc)
   end
 
   # GET /posts/1
@@ -26,7 +26,9 @@ class PostsController < ApplicationController
   # POST /posts
   # POST /posts.json
   def create
+    
     @post = Post.new(post_params)
+    @post.user_id = current_user.id
 
     respond_to do |format|
       if @post.save
@@ -71,10 +73,10 @@ class PostsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def post_params
-      params.require(:post).permit(:description, :user_id)
+      params.require(:post).permit(:avatar,:description, :user_id)
     end
 
-    private 
+    
     def get_users
      @usuarios = User.all.map{|user|[user.username,user.id]}
     end
